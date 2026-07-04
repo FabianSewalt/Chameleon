@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chameleon</title>
+<meta name="description" content="Doorgeef party-game: vind de chameleon.">
+<meta name="theme-color" content="#050905">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chameleon">
+<style>
+:root{
+  --bg:#050905;
+  --panel:#07120a;
+  --ink:#41ff7d;
+  --dim:#1e9e52;
+  --faint:#0d3d22;
+  --red:#ff5b67;
+  --amber:#ffb454;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:ui-monospace,'Cascadia Mono','SF Mono',Menlo,Consolas,'Courier New',monospace;
+  font-size:15px;
+  line-height:1.5;
+  min-height:100dvh;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+/* CRT-sfeer: scanlines + vignet */
+#crt{position:fixed;inset:0;pointer-events:none;z-index:40;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,.16) 2px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.45) 100%);
+}
+#topbar{display:flex;justify-content:space-between;gap:10px;
+  padding:10px 14px;border-bottom:1px solid var(--faint);
+  color:var(--dim);font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+main#screen{padding:18px 14px 28px;max-width:520px;margin:0 auto;}
+.stack{display:flex;flex-direction:column;gap:14px}
+.center{text-align:center}
+h1,h2,p{margin:0}
+b{font-weight:700}
+.panel{border:1px solid var(--faint);background:var(--panel);padding:12px}
+.cardtag{font-size:12px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.cardline{margin:6px 0}
+/* knoppen */
+.btn{display:block;width:100%;background:transparent;border:1px solid var(--dim);
+  color:var(--ink);font:inherit;text-transform:uppercase;letter-spacing:.06em;
+  padding:14px 12px;text-align:center;touch-action:manipulation;cursor:pointer}
+.btn:active{background:rgba(65,255,125,.14)}
+.btn.big{padding:18px 12px;font-size:17px;border-color:var(--ink)}
+.btn.slim{padding:9px 10px;font-size:13px}
+.btn.ghost{border-color:var(--faint);color:var(--dim)}
+.btn:disabled{opacity:.35;pointer-events:none}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.btn.danger:active{background:rgba(255,91,103,.14)}
+/* home */
+.hero{padding:22px 4px 6px}
+.herotitle{font-size:clamp(28px,9vw,40px);font-weight:700;letter-spacing:.04em;
+  text-shadow:0 0 14px rgba(65,255,125,.35)}
+.cursor{animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.boot p{margin:2px 0;white-space:pre}
+/* doorgeef & rol */
+.passname{font-size:clamp(32px,11vw,48px);font-weight:700;margin:6px 0 10px;
+  overflow-wrap:anywhere;text-shadow:0 0 14px rgba(65,255,125,.35)}
+.holdzone{border:1px dashed var(--dim);min-height:290px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:18px;touch-action:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.holdzone.active{border-style:solid;border-color:var(--ink);background:rgba(65,255,125,.05)}
+.lock{letter-spacing:.14em;color:var(--dim);margin-bottom:10px}
+.bigword{font-size:clamp(26px,9vw,42px);font-weight:700;letter-spacing:.04em;
+  overflow-wrap:anywhere;line-height:1.2;margin:10px 0;
+  text-shadow:0 0 12px rgba(65,255,125,.35)}
+.bigword.red{text-shadow:0 0 12px rgba(255,91,103,.35)}
+.revealname{font-size:22px;font-weight:700;margin:4px 0;overflow-wrap:anywhere}
+/* spelers */
+.prow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--faint)}
+.prow:last-child{border-bottom:none}
+.pname{flex:1;overflow-wrap:anywhere}
+.del{background:none;border:none;color:var(--red);font:inherit;padding:4px 8px;cursor:pointer}
+.addrow{display:flex;gap:8px;align-items:center}
+input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--dim);color:var(--ink);
+  font:inherit;padding:11px 10px;outline:none;border-radius:0;
+  user-select:text;-webkit-user-select:text}
+input:focus{border-color:var(--ink)}
+input::placeholder{color:var(--faint)}
+/* instellingen */
+.srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0}
+.srow.cat{border-top:1px dashed var(--faint);cursor:pointer}
+.stepper{display:flex;align-items:center}
+.stepper button{background:none;border:1px solid var(--dim);color:var(--ink);
+  font:inherit;padding:5px 12px;cursor:pointer;touch-action:manipulation}
+.stepper button:active{background:rgba(65,255,125,.14)}
+.stepper b{display:inline-block;min-width:2.5ch;text-align:center;margin:0 6px}
+.two{display:flex;gap:8px;margin-top:10px}
+.two .btn{flex:1}
+/* toast */
+#toast{position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom));
+  background:#0a1a0e;border:1px solid var(--ink);color:var(--ink);
+  padding:11px 12px;z-index:60;transform:translateY(160%);transition:transform .22s ease}
+#toast.show{transform:none}
+.hidden{display:none}
+/* kleur-utilities als laatste, zodat ze altijd winnen */
+.dim{color:var(--dim)}
+.red{color:var(--red)}
+.amber{color:var(--amber)}
+@media (prefers-reduced-motion: reduce){
+  .cursor{animation:none}
+  #toast{transition:none}
+}
+</style>
+</head>
+<body>
+<div id="crt"></div>
+<header id="topbar"><span id="tb-left">CHAMELEON</span><span id="tb-right"></span></header>
+<main id="screen"></main>
+<div id="toast"></div>
+<script src="./words.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
