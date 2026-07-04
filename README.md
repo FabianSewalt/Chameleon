@@ -28,14 +28,38 @@ Bij grote wijzigingen kun je optioneel `CACHE` in `sw.js` en `APP_VERSION` in
 
 Alles staat in `words.js`. Een woord toevoegen = string toevoegen aan de lijst.
 Een nieuw blok toevoegen = nieuwe categorie; die verschijnt automatisch in de
-instellingen. Let op: geen dubbele woorden binnen één categorie.
+instellingen én de categoriekiezer. Onderin `words.js` staat `CAT_EMOJI`: geef
+je nieuwe categorie daar een emoji, anders krijgt hij automatisch 📦.
+Let op: geen dubbele woorden binnen één categorie.
+
+## Punten
+
+Een potje bestaat uit een instelbaar aantal rondes (standaard 5), elke ronde
+met nieuwe willekeurige rollen en een nieuwe beginspeler.
+
+- Chameleon **ontmaskerd** → alle andere spelers **+1 punt**
+- Chameleon **ontsnapt** → de chameleon **+2 punten**
+- Optie *woord raden* aan → de chameleon mag aan het eind van elke ronde het
+  woord raden; goed = **+1 bonuspunt**
+
+## Woorden bewerken in de app
+
+In **Instellingen** heeft elke categorie een ✏️-knop: woorden toevoegen,
+aanpassen (tik op een woord) of verwijderen. Aangepaste lijsten worden op het
+apparaat bewaard; met *Standaardlijst herstellen* zet je de originele lijst
+terug. Hele nieuwe categorieën toevoegen kan via `words.js`.
 
 ## Spelregels (kort)
 
 1. Voeg spelers toe (volgorde = doorgeefvolgorde) en kies instellingen.
-2. Geef de telefoon rond; iedereen bekijkt zijn rol met **ingedrukt houden**.
-3. De aangewezen speler begint, daarna met de klok mee: iedereen geeft
+2. Start een spel en kies een categorie — of laat de app er willekeurig één kiezen.
+3. Geef de telefoon rond; iedereen bekijkt zijn rol met **ingedrukt houden**.
+4. De aangewezen speler begint, daarna met de klok mee: iedereen geeft
    één woord als hint over het geheime woord.
-4. Overleg en stem wie de chameleon is.
-5. Onthul de rollen. Gepakt? Dan mag de chameleon het woord raden om
+5. Overleg en stem wie de chameleon is.
+6. Onthul de rollen. Gepakt? Dan mag de chameleon het woord raden om
    alsnog te winnen. Onthul daarna het woord (en wat de salamanders dachten).
+
+Tip: staat "chameleon ziet categorie" **uit** (hard mode)? Kies dan bij het
+starten **willekeurig**, anders ziet de chameleon de categorie alsnog op het
+keuzescherm.

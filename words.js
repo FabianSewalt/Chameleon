@@ -132,6 +132,72 @@ const WORDS = {
     "Robotstofzuiger","3D-printer","VR-bril","Spelcomputer","Controller","App","Emoji","Selfie","Wachtwoord","QR-code",
     "Streamingdienst","Podcast","Kunstmatige intelligentie","Chatbot","Algoritme","Server","Raspberry Pi","Zonnepaneel","Elektrische auto","Navigatiesysteem",
     "Slimme speaker","Beveiligingscamera","Screenshot","Software-update","Virusscanner","Browser","E-mail","Videobellen","Gameheadset","Satelliet"
+  ],
+
+  "Minecraft Blokken": [
+    "Grass Block","Dirt","Stone","Cobblestone","Bedrock","Sand","Gravel","Oak Log","Oak Planks","Glass",
+    "Obsidian","TNT","Crafting Table","Furnace","Chest","Ender Chest","Bookshelf","Anvil","Enchanting Table","Brewing Stand",
+    "Hopper","Piston","Observer","Redstone Block","Note Block","Jukebox","Beacon","Coal Ore","Iron Ore","Gold Ore",
+    "Diamond Ore","Emerald Ore","Redstone Ore","Ancient Debris","Netherite Block","Diamond Block","Netherrack","Soul Sand","Glowstone","Magma Block",
+    "End Stone","Dragon Egg","Shulker Box","Slime Block","Wool","Sponge","Ice","Pumpkin","Hay Bale","Spawner"
+  ],
+
+  "Marvel Characters": [
+    "Iron Man","Captain America","Thor","Hulk","Black Widow","Hawkeye","Spider-Man","Doctor Strange","Black Panther","Captain Marvel",
+    "Ant-Man","Wasp","Scarlet Witch","Vision","Falcon","Winter Soldier","War Machine","Star-Lord","Gamora","Drax",
+    "Rocket Raccoon","Groot","Mantis","Nebula","Thanos","Loki","Nick Fury","Deadpool","Wolverine","Professor X",
+    "Magneto","Storm","Cyclops","Jean Grey","Beast","Mystique","Daredevil","Punisher","Ghost Rider","Blade",
+    "Venom","Green Goblin","Doctor Octopus","Ultron","Hela","Killmonger","Shang-Chi","Moon Knight","She-Hulk","Silver Surfer"
+  ],
+
+  "Frituursnacks": [
+    "Frikandel","Frikandel speciaal","Kroket","Rundvleeskroket","Satékroket","Goulashkroket","Kaaskroket","Garnalenkroket","Groentekroket","Bitterbal",
+    "Bamischijf","Nasibal","Kaassoufflé","Kipcorn","Kipnuggets","Kipfingers","Mexicano","Viandel","Pikanto","Sito-stick",
+    "Smulrol","Shaslick","Berehap","Loempia","Mini-loempia","Vlammetje","Gehaktbal","Braadworst","Curryworst","Knakworst",
+    "Hamburger","Cheeseburger","Patatje oorlog","Patatje joppie","Patatje speciaal","Patatje pinda","Kapsalon","Kibbeling","Lekkerbekje","Visstick",
+    "Churros","Uienringen","Twisterfriet","Vlaamse friet","Zoete-aardappelfriet"
+  ],
+
+  "Merken": [
+    "Nike","Adidas","Puma","Coca-Cola","Pepsi","Fanta","Red Bull","Monster Energy","McDonald's","Burger King",
+    "KFC","Subway","Domino's","Starbucks","Apple","Samsung","Sony","Nintendo","PlayStation","Xbox",
+    "Google","Microsoft","Netflix","Spotify","YouTube","TikTok","Instagram","WhatsApp","Lego","IKEA",
+    "H&M","Heineken","Tony's Chocolonely","Gucci","Rolex","Ferrari","Lamborghini","Porsche","BMW","Mercedes",
+    "Tesla","Volkswagen","Shell","Albert Heijn","Jumbo","Lidl","HEMA","Bol.com","Coolblue","Philips"
+  ],
+
+  "Monsters & Wezens": [
+    "Draak","Zombie","Vampier","Weerwolf","Mummie","Spook","Boeman","Skelet","Demon","Duivel",
+    "Trol","Ork","Goblin","Oger","Reus","Golem","Gargoyle","Cycloop","Minotaurus","Centaur",
+    "Griffioen","Feniks","Basilisk","Hydra","Cerberus","Medusa","Sfinx","Pegasus","Sirene","Banshee",
+    "Kraken","Leviathan","Zeeslang","Bigfoot","Yeti","Monster van Loch Ness","Chupacabra","Wendigo","Mothman","Slenderman",
+    "Poltergeist","Godzilla","King Kong","Frankenstein","Alien","Djinn","Kitsune","Harpij","Naga","Gremlin"
   ]
 
+};
+
+// Emoji per categorie (voor de knoppen in de app).
+// Nieuwe categorie zonder emoji hier? Dan krijgt hij automatisch 📦.
+const CAT_EMOJI = {
+  "Dieren": "🦁",
+  "Eten & Drinken": "🍕",
+  "Sport & Spel": "⚽",
+  "Landen": "🌍",
+  "Steden": "🏙️",
+  "Beroepen": "👷",
+  "Films & Series": "🎬",
+  "In Huis": "🛋️",
+  "Natuur & Buiten": "🌳",
+  "Vervoer": "🚗",
+  "Vakantie": "🏖️",
+  "Muziek": "🎵",
+  "Lichaam & Gezondheid": "💪",
+  "Feest & Uitgaan": "🎉",
+  "Fantasie & Sprookjes": "🐉",
+  "Technologie": "📱",
+  "Minecraft Blokken": "⛏️",
+  "Marvel Characters": "🦸",
+  "Frituursnacks": "🍟",
+  "Merken": "🏷️",
+  "Monsters & Wezens": "👹"
 };
