@@ -47,7 +47,9 @@ met nieuwe willekeurige rollen en een nieuwe beginspeler.
 In **Instellingen** heeft elke categorie een ✏️-knop: woorden toevoegen,
 aanpassen (tik op een woord) of verwijderen. Aangepaste lijsten worden op het
 apparaat bewaard; met *Standaardlijst herstellen* zet je de originele lijst
-terug. Hele nieuwe categorieën toevoegen kan via `words.js`.
+terug. Met **➕ Nieuwe categorie** maak je in de app een eigen categorie met
+naam, emoji en woorden (min. 2 woorden om mee te spelen); via de editor kun je
+die later ook weer verwijderen. Grote lijsten toevoegen kan óók via `words.js`.
 
 ## Spelregels (kort)
 

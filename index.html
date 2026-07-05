@@ -156,6 +156,13 @@ input::placeholder{color:#A9CDB8}
 .editcat{width:34px;height:34px;border-radius:50%;flex:none;border:0;background:var(--chip);color:var(--green-dark);font:inherit;font-size:15px;cursor:pointer}
 .srow .catname{flex:1}
 
+/* eigen categorieën */
+.emojigrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.emoji{font-size:24px;padding:8px 0;background:#F4FBF6;border:2px solid transparent;border-radius:14px;cursor:pointer;line-height:1.2;font-family:inherit}
+.emoji.sel{border-color:var(--green);background:var(--chip)}
+.btn.dangerous{background:#fff;color:#E05252;box-shadow:0 5px 0 var(--coral-soft)}
+.btn.dangerous:active{box-shadow:0 1px 0 var(--coral-soft)}
+
 /* toast */
 #toast{position:fixed;left:14px;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));
   background:#1B4D33;color:#fff;border-radius:18px;padding:13px 16px;font-weight:700;z-index:60;
