@@ -39,8 +39,9 @@ met nieuwe willekeurige rollen en een nieuwe beginspeler.
 
 - Chameleon **ontmaskerd** → alle andere spelers **+1 punt**
 - Chameleon **ontsnapt** → de chameleon **+2 punten**
-- Optie *woord raden* aan → de chameleon mag aan het eind van elke ronde het
-  woord raden; goed = **+1 bonuspunt**
+- Optie *woord raden* aan → aan het eind van elke ronde mogen zowel de
+  chameleon(s) als de salamander(s) het woord raden; goed geraden = **+1
+  bonuspunt** per persoon
 - **0 chameleons** (wel salamanders)? Dan jaagt de groep zonder het te weten op
   de salamander: salamander weggestemd → de rest **+1**, ontsnapt → salamander
   **+2**. Woord raden vervalt die ronde.

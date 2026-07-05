@@ -3,7 +3,7 @@
 // CHAMELEON — doorgeef-editie
 // ============================================================
 
-const APP_VERSION = '2.3.0';
+const APP_VERSION = '2.4.0';
 
 // ---------- helpers ----------
 const $ = sel => document.querySelector(sel);
@@ -193,11 +193,13 @@ function applyRoundScores(){
   for(const p of g.players){
     if(p.role === 'chameleon'){
       if(!g.caught) addPts(p.name, 2);                    // ontsnapt: +2
-      if(g.goodGuess.includes(p.name)) addPts(p.name, 1); // woord goed geraden: +1
     } else if(p.role === 'salamander' && !hasCham){
       if(!g.caught) addPts(p.name, 2);                    // geen chameleon: salamander is de gejaagde
     } else if(g.caught){
       addPts(p.name, 1);                                  // imposter ontmaskerd: iedereen +1
+    }
+    if((p.role === 'chameleon' || p.role === 'salamander') && g.goodGuess.includes(p.name)){
+      addPts(p.name, 1);                                  // woord goed geraden: +1 (chameleon én salamander)
     }
   }
 }
@@ -722,7 +724,7 @@ function renderRevealRoles(){
       <button class="btn big" id="yes">Ja, gepakt! 🎯</button>
       <button class="btn secondary" id="no">Nee, ontsnapt! 🏃</button>
     </div>`;
-  const next = () => (state.settings.wordGuess && chams.length) ? renderGuessIntro() : renderWordReveal(false);
+  const next = () => (state.settings.wordGuess && (chams.length || sals.length)) ? renderGuessIntro() : renderWordReveal(false);
   $('#yes').onclick = () => { g.caught = true; next(); };
   $('#no').onclick = () => { g.caught = false; next(); };
 }
@@ -731,7 +733,9 @@ function renderGuessIntro(){
   const g = state.game;
   topbar(roundLabel(), 'woord raden');
   const chams = g.players.filter(p => p.role === 'chameleon');
-  const names = chams.map(p => esc(p.name)).join(' & ');
+  const sals = g.players.filter(p => p.role === 'salamander');
+  const guessers = chams.concat(sals);
+  const names = guessers.map(p => esc(p.name)).join(' & ');
   scr.innerHTML = `
     <div class="stack center">
       <div class="card">
@@ -749,11 +753,12 @@ function renderWordReveal(judge){
   topbar(roundLabel(), 'het woord');
   const chams = g.players.filter(p => p.role === 'chameleon');
   const sals = g.players.filter(p => p.role === 'salamander');
+  const guessers = chams.concat(sals);
   let judgeBlock = '';
-  if(judge && chams.length === 1){
+  if(judge && guessers.length === 1){
     judgeBlock = `
       <div class="card center">
-        <h2 class="h2">Had ${esc(chams[0].name)} het goed?</h2>
+        <h2 class="h2">Had ${esc(guessers[0].name)} het goed?</h2>
       </div>
       <button class="btn big" id="gyes">Ja, goed geraden! 🎯</button>
       <button class="btn secondary" id="gno">Nee, fout 🙅</button>`;
@@ -761,9 +766,9 @@ function renderWordReveal(judge){
     judgeBlock = `
       <div class="card">
         <p class="label">Wie raadde het woord goed?</p>
-        ${chams.map(p => `
+        ${guessers.map(p => `
           <div class="srow guessrow" data-n="${esc(p.name)}" style="cursor:pointer">
-            <span>${esc(p.name)}</span><span class="switch"></span>
+            <span>${p.role === 'salamander' ? '🐸' : '🦎'} ${esc(p.name)}</span><span class="switch"></span>
           </div>`).join('')}
       </div>
       <button class="btn big" id="go">Naar de punten ➜</button>`;
@@ -785,8 +790,8 @@ function renderWordReveal(judge){
       ${judgeBlock}
     </div>`;
 
-  if(judge && chams.length === 1){
-    $('#gyes').onclick = () => { g.goodGuess = [chams[0].name]; renderRoundResult(); };
+  if(judge && guessers.length === 1){
+    $('#gyes').onclick = () => { g.goodGuess = [guessers[0].name]; renderRoundResult(); };
     $('#gno').onclick = () => { g.goodGuess = []; renderRoundResult(); };
   } else if(judge){
     scr.querySelectorAll('.guessrow').forEach(row => {

@@ -172,7 +172,9 @@ const WORDS = {
     "Griffioen","Feniks","Basilisk","Hydra","Cerberus","Medusa","Sfinx","Pegasus","Sirene","Banshee",
     "Kraken","Leviathan","Zeeslang","Bigfoot","Yeti","Monster van Loch Ness","Chupacabra","Wendigo","Mothman","Slenderman",
     "Poltergeist","Godzilla","King Kong","Frankenstein","Alien","Djinn","Kitsune","Harpij","Naga","Gremlin"
-  ]
+  ],
+
+  "Leeftijden": Array.from({ length: 100 }, (_, i) => String(i + 1))
 
 };
 
@@ -199,5 +201,6 @@ const CAT_EMOJI = {
   "Marvel Characters": "🦸",
   "Frituursnacks": "🍟",
   "Merken": "🏷️",
-  "Monsters & Wezens": "👹"
+  "Monsters & Wezens": "👹",
+  "Leeftijden": "🎂"
 };
