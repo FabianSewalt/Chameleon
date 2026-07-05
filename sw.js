@@ -1,12 +1,14 @@
 // CHAMELEON service worker
 // Strategie: network-first → altijd de nieuwste versie zolang je online bent,
 // offline valt hij terug op de cache. Versie ophogen bij grote wijzigingen.
-const CACHE = 'chameleon-v2.2.0';
+const CACHE = 'chameleon-v2.3.0';
 
 const ASSETS = [
   './',
   './index.html',
   './app.js',
+  './online.js',
+  './mqtt.min.js',
   './words.js',
   './manifest.json',
   './icon-192.png',

@@ -41,6 +41,9 @@ met nieuwe willekeurige rollen en een nieuwe beginspeler.
 - Chameleon **ontsnapt** → de chameleon **+2 punten**
 - Optie *woord raden* aan → de chameleon mag aan het eind van elke ronde het
   woord raden; goed = **+1 bonuspunt**
+- **0 chameleons** (wel salamanders)? Dan jaagt de groep zonder het te weten op
+  de salamander: salamander weggestemd → de rest **+1**, ontsnapt → salamander
+  **+2**. Woord raden vervalt die ronde.
 
 ## Woorden bewerken in de app
 
@@ -50,6 +53,24 @@ apparaat bewaard; met *Standaardlijst herstellen* zet je de originele lijst
 terug. Met **➕ Nieuwe categorie** maak je in de app een eigen categorie met
 naam, emoji en woorden (min. 2 woorden om mee te spelen); via de editor kun je
 die later ook weer verwijderen. Grote lijsten toevoegen kan óók via `words.js`.
+
+## Online spelen (kamercode)
+
+Via **Online spel 🌐** speelt iedereen op z'n eigen telefoon:
+
+1. Iedereen opent dezelfde app-link (GitHub Pages).
+2. Eén iemand kiest **Kamer maken 👑** — die is de spelleider én speelt mee.
+   De instellingen (rondes, rollen, woord raden) van de host gelden.
+3. De rest kiest **Meedoen met code 🙋** en vult de 5-letterige code + naam in.
+4. Rollen komen live op ieders eigen scherm (ingedrukt houden om te zien);
+   de host ziet wie z'n rol al bekeken heeft en start de onthulling.
+   Hints en stemmen doen jullie zelf — in het echt of in een call.
+
+Technisch: dit loopt via gratis publieke MQTT-servers (EMQX/HiveMQ), zonder
+account. Deel de code alleen met je groep; er zijn geen garanties op de gratis
+servers. Valt de host weg, dan stopt de kamer. Valt een speler even weg, dan
+kan die opnieuw meedoen met dezelfde naam en krijgt z'n rol automatisch terug.
+De servers staan in `OL_BROKERS` bovenin `online.js` als je wilt wisselen.
 
 ## Spelregels (kort)
 

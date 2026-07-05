@@ -3,7 +3,7 @@
 // CHAMELEON — doorgeef-editie
 // ============================================================
 
-const APP_VERSION = '2.2.0';
+const APP_VERSION = '2.3.0';
 
 // ---------- helpers ----------
 const $ = sel => document.querySelector(sel);
@@ -47,12 +47,20 @@ function armConfirm(btn, action){
     if(btn.isConnected && btn.dataset.armed === '1'){ btn.dataset.armed = ''; btn.innerHTML = old; }
   }, 2500);
 }
+function exitToHome(){
+  if(state.online && typeof olClose === 'function'){ olClose(); }
+  else { renderHome(); }
+}
 function catEmoji(c){
   if(state.customCats && state.customCats[c] && state.customCats[c].emoji) return state.customCats[c].emoji;
   return (typeof CAT_EMOJI !== 'undefined' && CAT_EMOJI[c]) || '📦';
 }
 const EMOJI_CHOICES = ['📦','⭐','🔥','🎮','🧠','🍀','🎵','🚀','🐾','🍺','🧀','⚽','🎬','🌍','👾','🃏','💎','🌶️','🦴','🎯','🏰','🧪','📚','🚲'];
 function catChip(c){ return '<span class="chip">' + catEmoji(c) + ' ' + esc(c) + '</span>'; }
+function resultChipText(hasCham, caught){
+  if(hasCham) return caught ? '🎯 Chameleon ontmaskerd: iedereen +1' : '🏃 Chameleon ontsnapt: chameleon +2';
+  return caught ? '🎯 Salamander weggestemd: de rest +1' : '🏃 Salamander ontsnapt: salamander +2';
+}
 
 const AVA_COLORS = ['#FF8FA3','#FFB65C','#5CC98F','#6FB7FF','#B79CFF','#FF9CCF','#8ED16F','#F5A26B'];
 function avaColor(name){
@@ -72,6 +80,7 @@ const state = {
   ),
   customWords: load('cham_words', {}), // per categorie: aangepaste woordenlijst
   customCats: load('cham_customcats', {}), // eigen categorieën: { naam: { emoji, words: [] } }
+  online: null, // actieve online-sessie (zie online.js)
   match: null, // { totalRounds, roundNo, scores: {naam: punten} }
   game: null,  // huidige ronde
   usedWords: {} // per sessie: voorkomt herhaling van woorden
@@ -104,6 +113,7 @@ function startMatch(){
   const n = state.players.length;
   const { chameleons, salamanders } = state.settings;
   if(n < 3){ flash('Je hebt minimaal 3 spelers nodig 👥'); renderPlayers(); return; }
+  if(chameleons + salamanders < 1){ flash('Kies minstens 1 chameleon of salamander'); renderSettings(); return; }
   if(chameleons + salamanders > n - 2){
     flash('Max ' + (n - 2) + ' speciale rollen bij ' + n + ' spelers');
     renderSettings(); return;
@@ -118,8 +128,8 @@ function startMatch(){
   renderCategoryPick();
 }
 
-function beginRound(catChoice){
-  const n = state.players.length;
+function buildRound(catChoice, names){
+  const n = names.length;
   const { chameleons, salamanders } = state.settings;
   const cats = enabledCategories();
 
@@ -147,22 +157,27 @@ function beginRound(catChoice){
     salWordByIndex[idx] = altPool[i % altPool.length];
   }
 
-  state.game = {
+  return {
     cat, word,
-    players: state.players.map((name, i) => ({
+    players: names.map((name, i) => ({
       name,
       role: roles[i],
       word: roles[i] === 'chameleon' ? null
           : roles[i] === 'salamander' ? salWordByIndex[i]
           : word
     })),
+    starter: pick(names) // elke ronde een nieuwe willekeurige beginspeler
+  };
+}
+
+function beginRound(catChoice){
+  state.game = Object.assign(buildRound(catChoice, state.players), {
     idx: 0,
-    starter: pick(state.players), // elke ronde een nieuwe willekeurige beginspeler
     caught: null,
     goodGuess: [],
     scored: false,
     deltas: {}
-  };
+  });
   renderPass();
 }
 
@@ -174,12 +189,15 @@ function applyRoundScores(){
     m.scores[name] = (m.scores[name] || 0) + pts;
     g.deltas[name] = (g.deltas[name] || 0) + pts;
   };
+  const hasCham = g.players.some(p => p.role === 'chameleon');
   for(const p of g.players){
     if(p.role === 'chameleon'){
       if(!g.caught) addPts(p.name, 2);                    // ontsnapt: +2
       if(g.goodGuess.includes(p.name)) addPts(p.name, 1); // woord goed geraden: +1
+    } else if(p.role === 'salamander' && !hasCham){
+      if(!g.caught) addPts(p.name, 2);                    // geen chameleon: salamander is de gejaagde
     } else if(g.caught){
-      addPts(p.name, 1);                                  // chameleon ontmaskerd: iedereen +1
+      addPts(p.name, 1);                                  // imposter ontmaskerd: iedereen +1
     }
   }
 }
@@ -206,10 +224,12 @@ function renderHome(){
         <p style="margin-top:10px"><span class="chip">${cats} categorieën · ${total} woorden</span></p>
       </div>
       <button class="btn big" id="start">Nieuw potje 🎮</button>
+      <button class="btn secondary" id="online">Online spel 🌐</button>
       <button class="btn secondary" id="players">Spelers (${n}) 👥</button>
       <button class="btn secondary" id="settings">Instellingen ⚙️</button>
     </div>`;
   $('#start').onclick = startMatch;
+  $('#online').onclick = () => { if(typeof renderOnlineMenu === 'function') renderOnlineMenu(); else flash('Online-module niet geladen'); };
   $('#players').onclick = renderPlayers;
   $('#settings').onclick = renderSettings;
 }
@@ -294,6 +314,7 @@ function renderSettings(){
           </span>
         </div>
         <p class="soft small">De salamander krijgt stiekem een ánder woord — zonder het zelf te weten. Max samen: aantal spelers − 2${n >= 3 ? ' (nu ' + (n - 2) + ')' : ''}.</p>
+        <p class="soft small">Ook 0 chameleons kan — dan jaagt de groep zonder het te weten op de salamander(s)! Minstens 1 speciale rol nodig.</p>
       </div>
       <div class="card">
         <div class="srow" id="catvis" style="cursor:pointer">
@@ -329,7 +350,7 @@ function renderSettings(){
   scr.querySelectorAll('.stepper button').forEach(btn => {
     btn.onclick = () => {
       const k = btn.dataset.k, d = Number(btn.dataset.d);
-      const min = { chameleons: 1, salamanders: 0, rounds: 1 }[k];
+      const min = { chameleons: 0, salamanders: 0, rounds: 1 }[k];
       const max = { chameleons: 6, salamanders: 6, rounds: 15 }[k];
       s[k] = Math.min(max, Math.max(min, s[k] + d));
       persistSettings();
@@ -535,9 +556,10 @@ function renderCategoryPick(){
       </div>
       <button class="btn subtle" id="abort">✕ Potje stoppen</button>
     </div>`;
-  $('#rand').onclick = () => beginRound(null);
-  scr.querySelectorAll('.catcard').forEach(el => { el.onclick = () => beginRound(el.dataset.c); });
-  $('#abort').onclick = e => armConfirm(e.currentTarget, renderHome);
+  const go = c => (state.online ? onlineBeginRound : beginRound)(c);
+  $('#rand').onclick = () => go(null);
+  scr.querySelectorAll('.catcard').forEach(el => { el.onclick = () => go(el.dataset.c); });
+  $('#abort').onclick = e => armConfirm(e.currentTarget, exitToHome);
 }
 
 function renderPass(){
@@ -679,22 +701,28 @@ function renderRevealRoles(){
   const sals = g.players.filter(p => p.role === 'salamander');
   scr.innerHTML = `
     <div class="stack">
+      ${chams.length ? `
       <div class="card center">
         <p class="label red">🦎 De chameleon${chams.length > 1 ? 's' : ''}</p>
         ${chams.map(p => `<div class="revealname red">${esc(p.name)}</div>`).join('')}
-      </div>
+      </div>` : `
+      <div class="card center">
+        <div class="rolemoji">🙅</div>
+        <p class="label red">Er was GEEN chameleon!</p>
+        <p class="soft small">Iedereen had een woord — maar niet iedereen hetzelfde…</p>
+      </div>`}
       ${sals.length ? `
       <div class="card center">
         <p class="label orange">🐸 De salamander${sals.length > 1 ? 's' : ''}</p>
         ${sals.map(p => `<div class="revealname orange">${esc(p.name)}</div>`).join('')}
       </div>` : ''}
       <div class="card center">
-        <h2 class="h2">🗳️ ${chams.length > 1 ? 'Zijn de chameleons' : 'Is de chameleon'} ontmaskerd?</h2>
+        <h2 class="h2">🗳️ ${chams.length ? (chams.length > 1 ? 'Zijn de chameleons ontmaskerd?' : 'Is de chameleon ontmaskerd?') : 'Hebben jullie een salamander weggestemd?'}</h2>
       </div>
       <button class="btn big" id="yes">Ja, gepakt! 🎯</button>
       <button class="btn secondary" id="no">Nee, ontsnapt! 🏃</button>
     </div>`;
-  const next = () => state.settings.wordGuess ? renderGuessIntro() : renderWordReveal(false);
+  const next = () => (state.settings.wordGuess && chams.length) ? renderGuessIntro() : renderWordReveal(false);
   $('#yes').onclick = () => { g.caught = true; next(); };
   $('#no').onclick = () => { g.caught = false; next(); };
 }
@@ -785,7 +813,7 @@ function renderRoundResult(){
   scr.innerHTML = `
     <div class="stack">
       <div class="card center" style="padding:12px">
-        <span class="chip">${g.caught ? '🎯 Chameleon ontmaskerd: iedereen +1' : '🏃 Chameleon ontsnapt: chameleon +2'}</span>
+        <span class="chip">${resultChipText(g.players.some(p => p.role === 'chameleon'), g.caught)}</span>
         ${g.goodGuess.length ? '<p class="soft small" style="margin-top:6px">🔍 Woord goed geraden: +1 bonus</p>' : ''}
       </div>
       <div class="card">
